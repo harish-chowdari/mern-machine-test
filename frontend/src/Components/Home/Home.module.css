@@ -1,0 +1,38 @@
+.container{
+    
+}
+
+.create{
+    text-align: left;
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+
+
+.input{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 30px;
+}
+
+.radio{
+    display: flex;
+    align-items: center; 
+    gap: 30px;
+    margin: 10px 0px;
+}
+
+.checkbox{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin: 10px 0px;
+}
+

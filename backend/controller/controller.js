@@ -1,4 +1,4 @@
-const MernSchema = require("../model/model")
+const MernSchema = require("../model/UserModel")
 
 
 

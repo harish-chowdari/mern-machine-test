@@ -11,8 +11,14 @@ app.use(cors())
 
 require("./Db")
 
-const routes = require("./routes/routes")
+const routes = require("./routes/UserRoutes")
 app.use("/api", routes)
+
+
+const empRoutes = require("./routes/EmpRoutes")
+app.use("/api", empRoutes)
+
+
 
 
 const port = process.env.PORT || 3000
