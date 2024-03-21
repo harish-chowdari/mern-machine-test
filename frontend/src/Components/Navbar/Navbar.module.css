@@ -1,0 +1,51 @@
+.navbar{
+    margin: 0px;
+    background-color: white;
+    box-shadow: 4px 4px 8px rgb(180, 177, 177);
+    
+}
+
+.logo{
+    margin: 0px;
+    padding-left: 20px;
+    padding-top: 5px;
+}
+
+.loginpage{
+    margin: 0px;
+    padding: 20px;
+
+}
+
+
+.dashboard{
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 60px;
+    align-items: center;
+    flex-wrap: wrap;
+
+}
+
+.left{
+    display: flex;
+    gap: 50px;
+    
+}
+
+.link{
+    text-decoration: none;
+    color: black;
+}
+
+
+.right{
+    display: flex;
+    gap: 50px;
+    align-items: center;
+}
+
+.btn{
+    cursor: pointer;
+    padding: 5px;
+}
