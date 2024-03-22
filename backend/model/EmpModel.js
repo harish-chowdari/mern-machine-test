@@ -18,8 +18,8 @@ const EmpSchema = mongoose.Schema({
     gender :{
         type:String
     },
-    course :{
-        type:String
+    courses :{
+        type:[String]
     },
     image :{
         type:String

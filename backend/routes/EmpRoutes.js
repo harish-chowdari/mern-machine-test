@@ -1,14 +1,28 @@
 const express = require("express")
 const router = express.Router()
+const multer = require("multer")
 
-const EmpController = require("../controller/EmpController")
+const empController = require("../controller/EmpController")
 
-
-
-router.post("/emp", EmpController.postEmp)
-
-
-router.get("/empdetails", EmpController.getEmp)
+const path = require("path")
+ 
 
 
-module.exports = router
+const storage = multer.diskStorage({
+    destination: "./upload/images",
+    filename: function(req,file,cb) {
+        cb(null, `${file.fieldname}_${Date.now()}_${path.extname(file.originalname)}`)
+    }
+})
+
+const upload = multer({storage:storage})
+
+router.use("/images", express.static("upload/images"))
+
+
+router.post("/upload", upload.single("product"), empController.uploadImage)
+ 
+
+
+
+module.exports=router

@@ -1,56 +1,22 @@
-const EmpSchema = require("../model/EmpModel")
+const empModel = require("../model/EmpModel")
 
+const port=4115
 
-
-async function postEmp(req,res) {
-    
-    try
-    {
-        const {name, email, mobile, designation, gender, course, image} = req.body
-
-        const Data = new EmpSchema({
-        name, 
-        email,
-        mobile, 
-        designation, 
-        gender, 
-        course, 
-        image
-
+function uploadImage(req,res) {
+    return res.status(200).json({
+        success:true,
+        image_url: `http://localhost:${port}/images/${req.file.filename}`
     })
-
-        const d = await Data.save()
-        res.json(d)
-    }
-
-    catch(err)
-    {
-        console.log({error : "Internal server error"})
-        return res.status(500).json({error : "Internal server error"}) 
-    }
-
 }
 
 
 
-async function getEmp(req,res) {
 
-    try
-    {
-        const Data = await EmpSchema.find().select("-_id")
 
-        res.json(Data)
-    }
 
-    catch(err)
-    {
-        console.log({error : "Internal server error"})
-        return res.status(500).json({error : "Internal server error"}) 
-    }
-    
-}
 
 module.exports = {
-    postEmp,
-    getEmp
+    uploadImage,
+   
+
 }
