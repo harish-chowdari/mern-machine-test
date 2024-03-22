@@ -8,8 +8,7 @@ const Home = () => {
 
   const [image,setImage] =React.useState(null)
 
-  const [selectedImage, setSelectedImage] = React.useState(null);
-
+  const [err, setErr] = React.useState("")
   
   const [formDetails, setformDetails] = useState({
     name: '',
@@ -22,14 +21,24 @@ const Home = () => {
   });
 
 
-  const imageHandler = (e)=>{
-    setImage(e.target.files[0])
-    
-  }
-
-  const handleImageClick = (imageURL) => {
-    setSelectedImage(imageURL);
-  }
+  const imageHandler = (e) => {
+    const selectedImage = e.target.files[0];
+    const allowedTypes = ['image/jpeg', 'image/png'];
+  
+    // Check if a file is selected and if its type is allowed
+    if (selectedImage && allowedTypes.includes(selectedImage.type)) {
+      setImage(selectedImage);
+      setformDetails(prevData => ({
+        ...prevData,
+        image: selectedImage
+      }));
+      setErr("");
+    } else {
+      setErr("Please select a valid image file (JPG or PNG)");
+    }
+  };
+  
+  
 
 
   const handleChange = (e) => {
@@ -40,11 +49,56 @@ const Home = () => {
         checked ? [...prevData[name], value] : prevData[name].filter(course => course !== value) :
         value
     }));
+    setErr(false)
   };
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if(!formDetails.email)
+    {
+      setErr("Email is required")
+      return
+    }
+
+    if(!formDetails.name)
+    {
+      setErr("Name is required")
+      return
+    }
+
+    if(!formDetails.mobile || formDetails.mobile.length < 9 || formDetails.mobile.length > 10)
+    {
+      setErr("Mobile number must be 10 digits")
+      return
+    }
+
+    if(!formDetails.designation)
+    {
+      setErr("Designation is required")
+      return
+    }
+
+    if(!formDetails.gender)
+    {
+      setErr("Gender is required")
+      return
+    }
+
+    if(!formDetails.courses || formDetails.courses.length === 0) {
+      setErr("Courses are required");
+      return;
+    }
+
+    if(!image)
+    {
+      setErr("Image is required")
+      return
+    }
+
+   
+
     try {
 
       const formData = new FormData()
@@ -59,17 +113,28 @@ const Home = () => {
       const response = await axios.post('http://localhost:4005/api/emp', {
         ...formDetails,
         image: imageResponse.data.image_url
-    }); // Using Axios post method
-      if (response.data.success) {
+    })
+
+      if(response.data.msg)
+      {
+        alert(response.data.msg)
+      }
+
+      else if(response.data.success) 
+      {
         alert('Form submitted successfully');
       }
+
       else
       {
-        alert("error")
+        alert("error occurred submitting form")
       }
       
-      // You can perform further actions upon successful submission
-    } catch (error) {
+
+    } 
+    
+    catch (error) 
+    {
       console.error('Error:', error);
       alert('Failed to submit form');
     }
@@ -79,63 +144,109 @@ const Home = () => {
     <form className={Styles.container} onSubmit={handleSubmit}>
       <p className={Styles.create}>Create Employee</p>
       <div className={Styles.content}>
+
         <div className={Styles.input}>
           <p>Name</p>
-          <input type='text' name='name' value={formDetails.name} onChange={handleChange} />
+          <input type='text' name='name' 
+          value={formDetails.name} 
+          onChange={handleChange} />
         </div>
+
         <div className={Styles.input}>
           <p>Email</p>
-          <input type='text' name='email' value={formDetails.email} onChange={handleChange} />
+          <input type='text' name='email' 
+          value={formDetails.email} 
+          onChange={handleChange} />       
         </div>
+
+        
+
         <div className={Styles.input}>
           <p>Mobile No</p>
-          <input type='text' name='mobile' value={formDetails.mobile} onChange={handleChange} />
+          <input type='text' name='mobile' 
+          value={formDetails.mobile} 
+          onChange={handleChange} />
         </div>
+
         <div className={Styles.input}>
           <p>Designation</p>
-          <select name='designation' value={formDetails.designation} onChange={handleChange}>
+
+          <select className={Styles.select} name='designation' 
+          value={formDetails.designation} 
+          onChange={handleChange}>
             <option>--Select--</option>
             <option value='HR'>HR</option>
             <option value='Manager'>Manager</option>
             <option value='Sales'>Sales</option>
           </select>
+
         </div>
+
         <div className={Styles.radio}>
           <p>Gender</p>
-          <div>
-            <input type='radio' id='male' name='gender' value='male' checked={formDetails.gender === 'male'} onChange={handleChange} />
+          <div className={Styles.gender}>
+
+          <div className={Styles.male}>
+            <input type='radio' id='male' name='gender' 
+            value='male' checked={formDetails.gender === 'male'} 
+            onChange={handleChange} />
             <label htmlFor='male'>Male</label>
-            <input type='radio' name='gender' id='female' value='female' checked={formDetails.gender === 'female'} onChange={handleChange} />
+          </div>
+          
+          <div className={Styles.female}>
+            <input type='radio' name='gender' 
+            id='female' value='female' 
+            checked={formDetails.gender === 'female'} 
+            onChange={handleChange} />
             <label htmlFor='female'>Female</label>
+            </div>
           </div>
         </div>
+
         <div className={Styles.checkbox}>
           <p>Course</p>
+          
           <div className={Styles.checkboxes}>
+            
             <div>
-              <input type='checkbox' id='mba' name='courses' value='MBA' onChange={handleChange} />
+              <input type='checkbox' id='mba' name='courses' 
+              value='MBA' onChange={handleChange} />
               <label htmlFor='mba'>MBA</label>
             </div>
+
             <div>
-              <input type='checkbox' id='bca' name='courses' value='BCA' onChange={handleChange} />
+              <input type='checkbox' id='bca' name='courses' 
+              value='BCA' onChange={handleChange} />
               <label htmlFor='bca'>BCA</label>
             </div>
+
             <div>
-              <input type='checkbox' id='bsc' name='courses' value='BSC' onChange={handleChange} />
+              <input type='checkbox' id='bsc' name='courses' 
+              value='BSC' onChange={handleChange} />
               <label htmlFor='bsc'>BSC</label>
             </div>
+
           </div>
+
         </div>
+
         <div className={Styles.input}>
           <p>Img Upload</p>
+          
           <label htmlFor='file-input'>
-          <img width="100px"
-            src={image ? URL.createObjectURL(image) : upload_area} alt='' />
-      </label>
+              <img width="100px"
+                src={image ? URL.createObjectURL(image) : upload_area} alt='' />
+          </label>
+
       <input  hidden type='file' 
-              name='image' id='file-input'  onChange={imageHandler} />
+              name='image' id='file-input' 
+              onChange={imageHandler} />
         </div>
-        <button type='submit'>Submit</button>
+
+        {err && <p className={Styles.err}>{err}</p>}
+
+        <button className={Styles.submit} type='submit'>Submit</button>
+      
       </div>
     </form>
   );

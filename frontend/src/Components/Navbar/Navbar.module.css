@@ -1,8 +1,10 @@
 .navbar{
     margin: 0px;
     background-color: white;
-    box-shadow: 4px 4px 8px rgb(180, 177, 177);
-    
+    max-width: 1440px;
+    border-bottom: 1px solid green;
+    position: sticky;
+    top: -40px;
 }
 
 .logo{
@@ -20,6 +22,7 @@
     flex-wrap: wrap;
     margin: 0px;
     align-items: center;
+    margin: 0px;
 
 }
 
@@ -38,9 +41,19 @@
 .link{
     text-decoration: none;
     color: black;
+    font-size: 1.3rem;
+    color: blue;
+}
+
+.right p{
+    font-size: 1.35rem;
+
 }
 
 .btn{
     cursor: pointer;
-    padding: 5px;
+    padding: 7px;
+    border: none;
+    background-color: rgb(78, 235, 72);
+    font-size: 1rem;
 }

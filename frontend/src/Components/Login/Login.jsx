@@ -7,8 +7,6 @@ import axios from "axios"
 
 const Login = () => {
 
-  const [error, setError] = React.useState("")
-
   const [Details, setDetails] = React.useState({
     userName:"",
     password:""
@@ -16,7 +14,7 @@ const Login = () => {
 
   const changeHandler = (e)=>{
     setDetails({...Details, [e.target.name] : e.target.value})
-    setError("")
+    
   }
 
   const submitHandler = async(e) =>{
@@ -36,7 +34,7 @@ const Login = () => {
         }
 
         else {
-          setError("Incorrect credentials")
+          alert("Incorrect credentials")
         }
         
 
@@ -73,8 +71,6 @@ const Login = () => {
             onChange={changeHandler} />
           
         </div>
-
-        {error && <p className={Styles.error}>{error}</p>}
 
         <button>Login</button>
 

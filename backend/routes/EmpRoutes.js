@@ -9,7 +9,7 @@ const storage = multer.diskStorage({
     destination: "./upload/images",
     filename: function(req, file, cb) {
         cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
-    }
+    } 
 });
 
 const upload = multer({ storage: storage });
@@ -18,7 +18,19 @@ const upload = multer({ storage: storage });
 router.use("/images", express.static(path.join(__dirname, "../upload/images")));
 
 router.post("/upload", upload.single("product"), EmpController.uploadImage);
+
+
 router.post("/emp", EmpController.postEmp);
+
+
 router.get("/empdetails", EmpController.getEmp);
+
+
+router.get("/empdetails/:id", EmpController.getEmpById)
+
+router.put("/update/:id", EmpController.updateEmp)
+
+router.delete("/remove/:id", EmpController.deleteEmp)
+
 
 module.exports = router;
