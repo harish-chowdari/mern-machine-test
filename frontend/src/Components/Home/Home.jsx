@@ -50,13 +50,13 @@ const Home = () => {
       const formData = new FormData()
       formData.append('product', image)
 
-      const imageResponse = await axios.post('http://localhost:4115/api/upload', formData, {
+      const imageResponse = await axios.post('http://localhost:4005/api/upload', formData, {
           headers: {
               'Content-Type': 'multipart/form-data'
           }
       })
 
-      const response = await axios.post('http://localhost:4115/api/emp', {
+      const response = await axios.post('http://localhost:4005/api/emp', {
         ...formDetails,
         image: imageResponse.data.image_url
     }); // Using Axios post method

@@ -1,28 +1,24 @@
-const express = require("express")
-const router = express.Router()
-const multer = require("multer")
+const express = require("express");
+const router = express.Router();
+const multer = require("multer");
+const path = require("path");
 
-const empController = require("../controller/EmpController")
-
-const path = require("path")
- 
-
+const EmpController = require("../controller/EmpController")
 
 const storage = multer.diskStorage({
     destination: "./upload/images",
-    filename: function(req,file,cb) {
-        cb(null, `${file.fieldname}_${Date.now()}_${path.extname(file.originalname)}`)
+    filename: function(req, file, cb) {
+        cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
     }
-})
+});
 
-const upload = multer({storage:storage})
+const upload = multer({ storage: storage });
 
-router.use("/images", express.static("upload/images"))
+// Serve static files
+router.use("/images", express.static(path.join(__dirname, "../upload/images")));
 
+router.post("/upload", upload.single("product"), EmpController.uploadImage);
+router.post("/emp", EmpController.postEmp);
+router.get("/empdetails", EmpController.getEmp);
 
-router.post("/upload", upload.single("product"), empController.uploadImage)
- 
-
-
-
-module.exports=router
+module.exports = router;
