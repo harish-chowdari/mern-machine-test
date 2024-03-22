@@ -34,12 +34,14 @@ const EmpList = () => {
   };
 
   // Filter employee details based on search query
-  const filteredEmpDetails = empDetails.filter(emp => 
-    (emp.name && emp.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
-    (emp.gender && emp.gender.toLowerCase().includes(searchQuery.toLowerCase())) ||
-    (emp.designation && emp.designation.toLowerCase().includes(searchQuery.toLowerCase())) ||
-    (emp.courses && emp.courses.some(course => course.toLowerCase().includes(searchQuery.toLowerCase())))
-  );
+  // Filter employee details based on search query
+const filteredEmpDetails = empDetails.filter(emp => 
+  (emp.name && emp.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+  (emp.gender && emp.gender.toLowerCase().includes(searchQuery.toLowerCase())) ||
+  (emp.designation && emp.designation.toLowerCase().includes(searchQuery.toLowerCase())) ||
+  (emp.courses && emp.courses.some(course => course.toLowerCase().includes(searchQuery.toLowerCase())))
+);
+
   
 
   return (
@@ -55,8 +57,11 @@ const EmpList = () => {
           <input type='text' placeholder='Enter Search Keyword' value={searchQuery} onChange={handleSearchChange} />
         </div>
         <div className={Styles.table}>
+          
           <table>
+
             <thead>
+
               <tr>
                 <th>Unique Id</th>
                 <th>Image</th>
@@ -69,29 +74,31 @@ const EmpList = () => {
                 <th>Create Date</th>
                 <th>Action</th>
               </tr>
-            </thead>
-            <tbody>
-            {filteredEmpDetails.map((emp, index) => {
-  console.log(emp._id); // Add this line to log the _id of each employee
-  return (
-    <tr key={index}>
-      <td className={Styles.sno}>{index + 1}</td>
-      <td><img src={emp.image} alt={emp.name} style={{ maxWidth: '50px' }} /></td>
-      <td>{emp.name}</td>
-      <td>{emp.email}</td>
-      <td>{emp.mobile}</td>
-      <td>{emp.designation}</td>
-      <td>{emp.gender}</td>
-      <td>{emp.courses}</td>
-      <td>{currentDate}</td> {/* Display current date */}
-      <td> 
-        <Link to={`/edit/${emp._id}`}><button>edit</button></Link> - <button onClick={() => handleDelete(index)}>delete</button>
-      </td>
-    </tr>
-  );
-})}
 
-</tbody>
+            </thead>
+
+            <tbody>
+              {filteredEmpDetails.map((emp, index) => {
+                  console.log(emp._id); // Add this line to log the _id of each employee
+                  return (
+                    <tr key={index}>
+                      <td className={Styles.sno}>{index + 1}</td>
+                      <td><img src={emp.image} alt={emp.name} style={{ maxWidth: '100px' }} /></td>
+                      <td>{emp.name}</td>
+                      <td>{emp.email}</td>
+                      <td>{emp.mobile}</td>
+                      <td>{emp.designation}</td>
+                      <td>{emp.gender}</td>
+                      <td>{emp.courses.join(', ')}</td>
+                      <td>{currentDate}</td> {/* Display current date */}
+                      <td> 
+                        <Link to={`/edit/${emp._id}`}><button>edit</button></Link> - <button onClick={() => handleDelete(index)}>delete</button>
+                      </td>
+                    </tr>
+                  );
+                })}
+
+            </tbody>
 
           </table>
         </div>

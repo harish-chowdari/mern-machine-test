@@ -42,6 +42,7 @@ const EditEmp = () => {
   }, [id]);
   
 
+  
 
 
   const handleSubmit = async (e) => {
@@ -77,15 +78,30 @@ const EditEmp = () => {
       return
     }
 
+    if(!image)
+    {
+      setErr("Image is required")
+      return
+    }
+
     if(!formDetails.courses || formDetails.courses.length === 0) {
       setErr("Courses are required");
       return;
     }
 
-    
+    const formData = new FormData()
+      formData.append('product', image)
+
+      const imageResponse = await axios.post('http://localhost:4005/api/upload', formData, {
+          headers: {
+              'Content-Type': 'multipart/form-data'
+          }
+      })
     
     try {
-      const response = await axios.put(`http://localhost:4005/api/update/${id}`, formDetails);
+      const response = await axios.put(`http://localhost:4005/api/update/${id}`, {...formDetails,
+      image:imageResponse.data.image_url
+    });
       console.log(response.data); // Log the response from the server
       alert("Form submitted Successfully")// Handle successful update (e.g., show success message)
     } 
@@ -102,19 +118,22 @@ const EditEmp = () => {
   const imageHandler = (e) => {
     const selectedImage = e.target.files[0];
     const allowedTypes = ['image/jpeg', 'image/png'];
-  
+    
     if (selectedImage && allowedTypes.includes(selectedImage.type)) {
       setImage(selectedImage);
       setFormDetails(prevData => ({
         ...prevData,
-        image: selectedImage
+        image: selectedImage // Update the image field in formDetails
       }));
       setErr("");
     } else {
       setErr("Please select a valid image file (JPG or PNG)");
     }
   };
-
+  
+  
+  
+  
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormDetails(prevData => ({
@@ -123,8 +142,10 @@ const EditEmp = () => {
         checked ? [...prevData[name], value] : prevData[name].filter(course => course !== value) :
         value
     }));
-    setErr(false)
+    setErr(false);
   };
+  
+      
 
   
 
@@ -216,6 +237,7 @@ const EditEmp = () => {
                 name='courses' 
                 value='MBA' 
                 onChange={handleChange} 
+                checked={formDetails.courses.includes('MBA')}
               />
               <label htmlFor='mba'>MBA</label>
             </div>
@@ -226,6 +248,7 @@ const EditEmp = () => {
                 name='courses' 
                 value='BCA' 
                 onChange={handleChange} 
+                checked={formDetails.courses.includes('BCA')}
               />
               <label htmlFor='bca'>BCA</label>
             </div>
@@ -236,6 +259,7 @@ const EditEmp = () => {
                 name='courses' 
                 value='BSC' 
                 onChange={handleChange} 
+                checked={formDetails.courses.includes('BSC')}
               />
               <label htmlFor='bsc'>BSC</label>
             </div>
@@ -245,19 +269,13 @@ const EditEmp = () => {
         <div className={Styles.input}>
           <p>Img Upload</p>
           <label htmlFor='file-input'>
-            <img 
-              width="100px"
-              src={image ? URL.createObjectURL(image) : formDetails.image || upload_area} 
-              alt='' 
-            />
+              <img width="100px"
+                src={image ? URL.createObjectURL(image) : upload_area} alt='' />
           </label>
-          <input  
-            hidden 
-            type='file' 
-            name='image' 
-            id='file-input' 
-            onChange={imageHandler} 
-          />
+
+      <input  hidden type='file' 
+              name='image' id='file-input' 
+              onChange={imageHandler} />
         </div>
 
         {err && <p className={Styles.err}>{err}</p>}
