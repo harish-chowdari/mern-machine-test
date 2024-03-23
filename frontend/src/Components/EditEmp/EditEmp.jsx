@@ -18,28 +18,34 @@ const EditEmp = () => {
     image: ''
   });
 
+  const [empData, setEmpData] = useState({});
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:4005/api/empdetails/${id}`);
+        const response = await axios.get(`http://localhost:4005/empdetails/${id}`);
         const empData = response.data;
         // Ensure that the courses property matches the format expected by the checkboxes
         const coursesData = ['MBA', 'BCA', 'BSC'].filter(course => empData.courses.includes(course));
+        setEmpData(empData); // Set empData state with the retrieved data
         setFormDetails({
           name: empData.name,
           email: empData.email,
           mobile: empData.mobile,
           designation: empData.designation,
           gender: empData.gender,
-          courses: coursesData, // Set the courses property
+          courses: coursesData,
           image: empData.image
         });
+        setErr(""); // Clear any previous error
       } catch (error) {
         console.error('Error fetching employee details:', error);
+        setErr("Error fetching employee details. Please try again."); // Set error message
       }
     };
     fetchData();
   }, [id]);
+  
   
 
   
@@ -47,70 +53,66 @@ const EditEmp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if(!formDetails.email)
-    {
-      setErr("Email is required")
-      return
+  
+    if (!formDetails.email) {
+      setErr("Email is required");
+      return;
     }
-
-    if(!formDetails.name)
-    {
-      setErr("Name is required")
-      return
+  
+    if (!formDetails.name) {
+      setErr("Name is required");
+      return;
     }
-
-    if(!formDetails.mobile || formDetails.mobile.length < 9 || formDetails.mobile.length > 10)
-    {
-      setErr("Mobile number must be 10 digits")
-      return
+  
+    if (!formDetails.mobile || formDetails.mobile.length < 9 || formDetails.mobile.length > 10) {
+      setErr("Mobile number must be 10 digits");
+      return;
     }
-
-    if(!formDetails.designation)
-    {
-      setErr("Designation is required")
-      return
+  
+    if (!formDetails.designation) {
+      setErr("Designation is required");
+      return;
     }
-
-    if(!formDetails.gender)
-    {
-      setErr("Gender is required")
-      return
+  
+    if (!formDetails.gender) {
+      setErr("Gender is required");
+      return;
     }
-
-    if(!image)
-    {
-      setErr("Image is required")
-      return
-    }
-
-    if(!formDetails.courses || formDetails.courses.length === 0) {
+  
+    if (!formDetails.courses || formDetails.courses.length === 0) {
       setErr("Courses are required");
       return;
     }
-
-    const formData = new FormData()
-      formData.append('product', image)
-
-      const imageResponse = await axios.post('http://localhost:4005/api/upload', formData, {
-          headers: {
-              'Content-Type': 'multipart/form-data'
-          }
-      })
-    
+  
+    if (!image) {
+      setErr("Image is required");
+      return;
+    }
+  
     try {
-      const response = await axios.put(`http://localhost:4005/api/update/${id}`, {...formDetails,
-      image:imageResponse.data.image_url
-    });
+      // Upload the new image
+      const formData = new FormData();
+      formData.append('product', image);
+      const imageResponse = await axios.post('http://localhost:4005/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+  
+      // Update the employee data including the new image URL
+      const response = await axios.put(`http://localhost:4005/update/${id}`, {
+        ...formDetails,
+        image: imageResponse.data.image_url
+      });
+  
       console.log(response.data); // Log the response from the server
-      alert("Form submitted Successfully")// Handle successful update (e.g., show success message)
-    } 
-    
-    catch (error) {
+      alert("Form submitted Successfully"); // Handle successful update (e.g., show success message)
+    } catch (error) {
       console.error('Error updating employee:', error);
       // Handle error (e.g., show error message)
     }
   };
+  
   
 
 
@@ -270,10 +272,11 @@ const EditEmp = () => {
           <p>Img Upload</p>
           <label htmlFor='file-input'>
               <img width="100px"
-                src={image ? URL.createObjectURL(image) : upload_area} alt='' />
+                src={empData.image ? empData.image : upload_area} alt='' />
           </label>
+          
 
-      <input  hidden type='file' 
+      <input type='file' 
               name='image' id='file-input' 
               onChange={imageHandler} />
         </div>
@@ -282,6 +285,7 @@ const EditEmp = () => {
 
         <button className={Styles.submit} 
         onClick={handleSubmit}
+        
         type='submit'>Update</button>
       </div>
     </form>

@@ -16,7 +16,7 @@ app.use("/api", routes)
 
 
 const empRoutes = require("./routes/EmpRoutes")
-app.use("/api", empRoutes)
+app.use("/", empRoutes)
 
 
 

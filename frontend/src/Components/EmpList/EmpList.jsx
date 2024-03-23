@@ -11,7 +11,7 @@ const EmpList = () => {
   useEffect(() => {
     const fetchEmpDetails = async () => {
       try {
-        const response = await axios.get('http://localhost:4005/api/empdetails');
+        const response = await axios.get('http://localhost:4005/empdetails');
         setEmpDetails(response.data);
       } catch (error) {
         console.error('Error fetching employee details:', error);
@@ -79,11 +79,11 @@ const filteredEmpDetails = empDetails.filter(emp =>
 
             <tbody>
               {filteredEmpDetails.map((emp, index) => {
-                  console.log(emp._id); // Add this line to log the _id of each employee
+                  console.log(emp); // Add this line to log the _id of each employee
                   return (
                     <tr key={index}>
                       <td className={Styles.sno}>{index + 1}</td>
-                      <td><img src={emp.image} alt={emp.name} style={{ maxWidth: '100px' }} /></td>
+                      <td><img src={emp.image} alt={emp.name} style={{ maxWidth: '50px' }} /></td>
                       <td>{emp.name}</td>
                       <td>{emp.email}</td>
                       <td>{emp.mobile}</td>

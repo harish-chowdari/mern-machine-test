@@ -53,12 +53,28 @@ const Home = () => {
   };
 
 
+  const isEmailValid = (email) => {
+    // Regular expression for email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+  
+  // Usage example
+  const email = "example@example.com";
+  if (isEmailValid(email)) {
+    console.log("Email is valid");
+  } else {
+    console.log("Email is invalid");
+  }
+
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if(!formDetails.email)
+    if(!formDetails.email || !isEmailValid(formDetails.email))
     {
-      setErr("Email is required")
+      setErr("Please enter a valid email address")
       return
     }
 
@@ -104,13 +120,13 @@ const Home = () => {
       const formData = new FormData()
       formData.append('product', image)
 
-      const imageResponse = await axios.post('http://localhost:4005/api/upload', formData, {
+      const imageResponse = await axios.post('http://localhost:4005/upload', formData, {
           headers: {
               'Content-Type': 'multipart/form-data'
           }
       })
 
-      const response = await axios.post('http://localhost:4005/api/emp', {
+      const response = await axios.post('http://localhost:4005/emp', {
         ...formDetails,
         image: imageResponse.data.image_url
     })
